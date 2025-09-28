@@ -1,0 +1,28 @@
+{
+  "processed_documents": {
+    "naval_test": {
+      "document_name": "naval_test",
+      "pdf_path": "unknown",
+      "strategies": {
+        "fixed_char_1000": {
+          "chunk_count": 272,
+          "collection_name": "naval_test_fixed_char_1000",
+          "stats": {
+            "recovered_from_collection": true
+          }
+        },
+        "sentence_8": {
+          "chunk_count": 428,
+          "collection_name": "naval_test_sentence_8",
+          "stats": {
+            "recovered_from_collection": true
+          }
+        }
+      },
+      "text_length": 0,
+      "word_count": 0,
+      "processing_time": 0
+    }
+  },
+  "document_stats": {}
+}

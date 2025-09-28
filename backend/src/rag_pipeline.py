@@ -7,6 +7,7 @@ from typing import List, Dict, Any, Optional
 import logging
 from pathlib import Path
 import time
+import json
 
 from pdf_processor import PDFProcessor
 from chunking_strategies import ChunkingManager, TextChunk
@@ -22,7 +23,8 @@ class RAGPipeline:
     def __init__(
         self,
         embedding_model: str = "all-MiniLM-L6-v2",
-        vector_store_path: str = "data/chroma_db"
+        vector_store_path: str = "data/chroma_db",
+        metadata_path: str = "data/document_metadata.json"
     ):
         """
         Initialize RAG pipeline.
@@ -30,14 +32,22 @@ class RAGPipeline:
         Args:
             embedding_model: Sentence-transformer model name
             vector_store_path: Path for ChromaDB storage
+            metadata_path: Path for document metadata persistence
         """
         self.pdf_processor = PDFProcessor()
         self.chunking_manager = ChunkingManager()
         self.embedding_generator = EmbeddingGenerator(model_name=embedding_model)
         self.vector_store = VectorStore(persist_directory=vector_store_path)
 
+        self.metadata_path = Path(metadata_path)
+        self.metadata_path.parent.mkdir(parents=True, exist_ok=True)
+
         self.processed_documents = {}
         self.document_stats = {}
+
+        # Load existing document metadata
+        self._load_document_metadata()
+        self._discover_existing_documents()
 
     def process_document(
         self,
@@ -141,6 +151,9 @@ class RAGPipeline:
         # Store results
         self.processed_documents[document_name] = results
         self.document_stats[document_name] = text_data["metadata"]
+
+        # Persist metadata
+        self._save_document_metadata()
 
         logger.info(f"Document processing completed in {processing_time:.2f} seconds")
         return results
@@ -289,6 +302,89 @@ class RAGPipeline:
         """Get statistics about a specific collection."""
         collection_name = f"{document_name}_{strategy_name}"
         return self.vector_store.get_collection_stats(collection_name)
+
+    def _load_document_metadata(self) -> None:
+        """Load persisted document metadata from file."""
+        try:
+            if self.metadata_path.exists():
+                with open(self.metadata_path, 'r') as f:
+                    data = json.load(f)
+                    self.processed_documents = data.get('processed_documents', {})
+                    self.document_stats = data.get('document_stats', {})
+                logger.info(f"Loaded metadata for {len(self.processed_documents)} documents")
+            else:
+                logger.info("No existing document metadata found")
+        except Exception as e:
+            logger.warning(f"Error loading document metadata: {e}")
+            self.processed_documents = {}
+            self.document_stats = {}
+
+    def _save_document_metadata(self) -> None:
+        """Save document metadata to file."""
+        try:
+            metadata = {
+                'processed_documents': self.processed_documents,
+                'document_stats': self.document_stats
+            }
+            with open(self.metadata_path, 'w') as f:
+                json.dump(metadata, f, indent=2)
+            logger.debug("Document metadata saved")
+        except Exception as e:
+            logger.error(f"Error saving document metadata: {e}")
+
+    def _discover_existing_documents(self) -> None:
+        """Discover documents from existing collections that may not be in metadata."""
+        try:
+            collections = self.vector_store.list_collections()
+            discovered_docs = set()
+
+            for collection_name in collections:
+                # Parse collection name format: document_name_strategy_name
+                # Strategy names are known, so we can match them properly
+                strategy_names = self.chunking_manager.list_strategies()
+                doc_name = None
+                strategy_name = None
+
+                # Try to match against known strategies from the end
+                for strategy in strategy_names:
+                    if collection_name.endswith(f'_{strategy}'):
+                        doc_name = collection_name[:-len(f'_{strategy}')]
+                        strategy_name = strategy
+                        break
+
+                # If no strategy matched, skip this collection
+                if not doc_name or not strategy_name:
+                    continue
+
+                discovered_docs.add(doc_name)
+
+                # Initialize document info if not exists
+                if doc_name not in self.processed_documents:
+                    self.processed_documents[doc_name] = {
+                        'document_name': doc_name,
+                        'pdf_path': 'unknown',
+                        'strategies': {},
+                        'text_length': 0,
+                        'word_count': 0,
+                        'processing_time': 0
+                    }
+
+                # Add strategy if not already present
+                if strategy_name not in self.processed_documents[doc_name]['strategies']:
+                    stats = self.vector_store.get_collection_stats(collection_name)
+                    if 'error' not in stats:
+                        self.processed_documents[doc_name]['strategies'][strategy_name] = {
+                            'chunk_count': stats['count'],
+                            'collection_name': collection_name,
+                            'stats': {'recovered_from_collection': True}
+                        }
+
+            if discovered_docs:
+                logger.info(f"Discovered {len(discovered_docs)} documents from existing collections: {discovered_docs}")
+                self._save_document_metadata()
+
+        except Exception as e:
+            logger.warning(f"Error discovering existing documents: {e}")
 
 
 if __name__ == "__main__":

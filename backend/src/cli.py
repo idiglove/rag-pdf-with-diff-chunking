@@ -57,11 +57,33 @@ def query_command(pipeline, args):
     print(f"Document: {args.document}")
     print(f"Strategy: {args.strategy}")
 
+    # Check if document exists
+    if args.document not in pipeline.list_documents():
+        print(f"Error: Document '{args.document}' not found.")
+        print("Available documents:")
+        documents = pipeline.list_documents()
+        if documents:
+            for doc in documents:
+                print(f"  - {doc}")
+        else:
+            print("  No documents processed yet. Use 'python cli.py process' to add documents.")
+        return
+
+    # Check if strategy exists for this document
+    doc_info = pipeline.get_document_info(args.document)
+    if 'error' not in doc_info and args.strategy not in doc_info['strategies']:
+        print(f"Error: Strategy '{args.strategy}' not found for document '{args.document}'.")
+        print("Available strategies for this document:")
+        for strategy in doc_info['strategies'].keys():
+            print(f"  - {strategy}")
+        return
+
     try:
         result = pipeline.query(args.query, args.document, args.strategy, args.top_k)
 
         if 'error' in result:
             print(f"Query error: {result['error']}")
+            print("This might happen if the collection doesn't exist or contains no data.")
             return
 
         print(f"\nQuery completed in {result['query_time']:.3f} seconds")
@@ -84,9 +106,32 @@ def compare_command(pipeline, args):
     print(f"Comparing strategies for query: '{args.query}'")
     print(f"Document: {args.document}")
 
+    # Check if document exists
+    if args.document not in pipeline.list_documents():
+        print(f"Error: Document '{args.document}' not found.")
+        print("Available documents:")
+        documents = pipeline.list_documents()
+        if documents:
+            for doc in documents:
+                print(f"  - {doc}")
+        else:
+            print("  No documents processed yet. Use 'python cli.py process' to add documents.")
+        return
+
     strategies = args.strategies.split(',') if args.strategies else None
     if strategies:
         print(f"Comparing strategies: {strategies}")
+        # Validate strategies exist for this document
+        doc_info = pipeline.get_document_info(args.document)
+        if 'error' not in doc_info:
+            available_strategies = set(doc_info['strategies'].keys())
+            invalid_strategies = set(strategies) - available_strategies
+            if invalid_strategies:
+                print(f"Error: Invalid strategies for document '{args.document}': {invalid_strategies}")
+                print("Available strategies for this document:")
+                for strategy in available_strategies:
+                    print(f"  - {strategy}")
+                return
 
     try:
         result = pipeline.compare_strategies(args.query, args.document, strategies, args.top_k)
@@ -175,21 +220,31 @@ def main():
         description="RAG Pipeline CLI for testing chunking strategies",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
+Typical Workflow:
+  1. FIRST: Process a PDF document to create chunks and embeddings
+  2. THEN: List, query, or compare the processed documents
+
 Examples:
-  # Process a PDF document
+
+  # STEP 1: Process a PDF document (REQUIRED FIRST)
   python cli.py process path/to/book.pdf --name my_book
 
-  # Process with specific strategies
+  # Process with specific strategies only
   python cli.py process book.pdf --name test --strategies "fixed_char_1000,sentence_8"
 
-  # Query a document
+  # STEP 2: Verify processing worked
+  python cli.py list
+
+  # STEP 3: Query the processed document
   python cli.py query "What is machine learning?" --document my_book --strategy fixed_char_1000
 
-  # Compare strategies
+  # Compare different strategies for the same query
   python cli.py compare "What is AI?" --document my_book
 
-  # Show document info
+  # Show detailed document information
   python cli.py info --document my_book
+
+Note: You must process a document before you can query or compare it.
         """
     )
 
@@ -214,6 +269,9 @@ Examples:
     compare_parser.add_argument('--document', required=True, help='Document name to search')
     compare_parser.add_argument('--strategies', help='Comma-separated list of strategies to compare')
     compare_parser.add_argument('--top_k', type=int, default=3, help='Number of results per strategy')
+
+    # List command
+    list_parser = subparsers.add_parser('list', help='List processed documents and available strategies')
 
     # Info command
     info_parser = subparsers.add_parser('info', help='Show detailed document information')

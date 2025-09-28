@@ -38,6 +38,7 @@ class VectorStore:
             for collection in existing_collections:
                 self.collections[collection.name] = collection
                 logger.info(f"Loaded existing collection: {collection.name}")
+            logger.info(f"Loaded {len(existing_collections)} existing collections")
         except Exception as e:
             logger.warning(f"Error loading existing collections: {e}")
 
@@ -64,7 +65,10 @@ class VectorStore:
     ) -> None:
         """Add chunks with embeddings to collection."""
         if collection_name not in self.collections:
-            raise ValueError(f"Collection {collection_name} not found")
+            # Try to reload collections in case they were created elsewhere
+            self._load_existing_collections()
+            if collection_name not in self.collections:
+                raise ValueError(f"Collection {collection_name} not found")
 
         collection = self.collections[collection_name]
 
@@ -88,7 +92,10 @@ class VectorStore:
     ) -> Dict[str, Any]:
         """Search for similar chunks."""
         if collection_name not in self.collections:
-            raise ValueError(f"Collection {collection_name} not found")
+            # Try to reload collections in case they were created elsewhere
+            self._load_existing_collections()
+            if collection_name not in self.collections:
+                raise ValueError(f"Collection {collection_name} not found")
 
         collection = self.collections[collection_name]
 
@@ -107,7 +114,7 @@ class VectorStore:
     def get_collection_stats(self, collection_name: str) -> Dict[str, Any]:
         """Get statistics about a collection."""
         if collection_name not in self.collections:
-            return {}
+            return {"error": f"Collection {collection_name} not found"}
 
         collection = self.collections[collection_name]
         count = collection.count()

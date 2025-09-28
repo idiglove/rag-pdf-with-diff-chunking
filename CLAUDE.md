@@ -176,6 +176,37 @@ A comprehensive RAG (Retrieval-Augmented Generation) system designed to evaluate
 - Improved text preprocessing pipeline
 - Updated chunking strategy documentation
 
+### Milestone 1.2: Fix Pipeline Collection Management (Immediate)
+
+**Goal**: Fix critical bugs in collection persistence and CLI functionality
+
+**Issues Identified**:
+
+- Collections not automatically loaded when pipeline starts fresh (empty ChromaDB)
+- Query command fails when collections don't exist even if data was processed previously
+- CLI missing `list` command that was referenced in help text
+- No graceful handling of missing collections or documents
+- Document metadata not persisted across sessions
+
+**Todos**:
+
+- [x] Fix collection loading in vector store initialization
+- [x] Add automatic collection discovery from ChromaDB on startup
+- [x] Implement document metadata persistence to track processed documents
+- [x] Add logic to recreate collections from persisted metadata when missing
+- [x] Implement missing `list` command in CLI
+- [x] Add graceful error handling for missing collections/documents
+- [x] Add collection existence checks before queries
+- [x] Update CLI help text to match actual available commands
+- [x] Test full pipeline persistence across restarts
+
+**Deliverables**:
+
+- Pipeline that properly loads existing collections on startup
+- Complete CLI with all referenced commands implemented
+- Robust error handling for missing data scenarios
+- Persistent document metadata across sessions
+
 ### Milestone 2: Core Chunking Strategies (Week 2)
 
 **Goal**: Implement and test multiple chunking approaches
@@ -361,6 +392,8 @@ A comprehensive RAG (Retrieval-Augmented Generation) system designed to evaluate
 - Practice building full-stack ML applications
 - Develop evaluation methodologies for RAG systems
 
-## Claude Todos
+## 🚨 CLAUDE CRITICAL REMINDERS 🚨
 
-- Whenever a todo is done, check it off the claude.md
+- **MANDATORY**: Whenever a todo is done, IMMEDIATELY check it off in claude.md by changing [ ] to [x]
+- **NEVER FORGET**: Update the project milestones section every time you complete a task
+- **ALWAYS REMEMBER**: This is required for every single todo completion - no exceptions!
