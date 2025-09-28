@@ -3,8 +3,8 @@ Vector storage using ChromaDB for the RAG system.
 Handles embedding storage and similarity search.
 """
 
-import chromadb
-from chromadb.config import Settings
+import chromadb # type: ignore
+from chromadb.config import Settings # type: ignore
 from typing import List, Dict, Any, Optional
 import logging
 import os
@@ -29,6 +29,17 @@ class VectorStore:
             )
         )
         self.collections = {}
+        self._load_existing_collections()
+
+    def _load_existing_collections(self) -> None:
+        """Load all existing collections from ChromaDB."""
+        try:
+            existing_collections = self.client.list_collections()
+            for collection in existing_collections:
+                self.collections[collection.name] = collection
+                logger.info(f"Loaded existing collection: {collection.name}")
+        except Exception as e:
+            logger.warning(f"Error loading existing collections: {e}")
 
     def create_collection(self, name: str, strategy: str) -> chromadb.Collection:
         """Create or get a collection for a chunking strategy."""

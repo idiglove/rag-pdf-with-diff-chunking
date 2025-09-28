@@ -138,15 +138,43 @@ A comprehensive RAG (Retrieval-Augmented Generation) system designed to evaluate
 - [x] Select and download a suitable test book (300+ pages, non-fiction)
 - [x] Create basic character-based chunking function (1000 characters)
 - [x] Set up ChromaDB for vector storage
-- [ ] Implement basic text embedding using sentence-transformers
-- [ ] Create simple storage and retrieval functions
-- [ ] Test end-to-end pipeline with sample queries
+- [x] Implement basic text embedding using sentence-transformers
+- [x] Create simple storage and retrieval functions
+- [x] Test end-to-end pipeline with sample queries
 
 **Deliverables**:
 
 - Working PDF processing pipeline
 - Basic vector storage and retrieval
 - Simple command-line query interface
+
+### Milestone 1.1: Debug Chunking Strategy Issues (Immediate)
+
+**Goal**: Fix critical bugs discovered in initial chunking strategies
+
+**Issues Identified**:
+
+- paragraph_3 strategy only produces 1 chunk (should be many more)
+- Other strategies may have missing chunks or incorrect counts
+- Need to validate chunking logic and text preprocessing
+
+**Todos**:
+
+- [x] Debug paragraph_3 strategy - investigate why only 1 chunk generated
+- [x] Analyze text preprocessing and paragraph detection logic
+- [x] Test sentence_8 strategy for missing chunks
+- [x] Verify fixed_char_1000 strategy chunk boundaries
+- [x] Fix paragraph splitting regex pattern
+- [x] Add better text normalization and cleaning
+- [x] Test all strategies with sample text to ensure proper chunking
+- [x] Update chunk count validation and logging
+
+**Deliverables**:
+
+- Fixed paragraph chunking strategy with proper multi-chunk output
+- Validated chunking strategies with correct chunk counts
+- Improved text preprocessing pipeline
+- Updated chunking strategy documentation
 
 ### Milestone 2: Core Chunking Strategies (Week 2)
 

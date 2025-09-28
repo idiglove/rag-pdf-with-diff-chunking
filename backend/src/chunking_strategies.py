@@ -202,9 +202,46 @@ class ParagraphChunking(ChunkingStrategy):
         self.paragraphs_per_chunk = paragraphs_per_chunk
 
     def _split_into_paragraphs(self, text: str) -> List[str]:
-        """Split text into paragraphs."""
-        paragraphs = re.split(r'\n\s*\n', text)
-        return [p.strip() for p in paragraphs if p.strip()]
+        """Split text into paragraphs using multiple heuristics for PDF text."""
+        lines = text.split('\n')
+        paragraphs = []
+        current_paragraph = []
+
+        for i, line in enumerate(lines):
+            line = line.strip()
+
+            # Skip empty lines
+            if not line:
+                continue
+
+            # Skip lines that are likely headers/titles (all caps, short lines)
+            if len(line) < 100 and (line.isupper() or line.isdigit()):
+                # If we have content, save current paragraph
+                if current_paragraph:
+                    paragraphs.append(' '.join(current_paragraph))
+                    current_paragraph = []
+                continue
+
+            # Add line to current paragraph
+            current_paragraph.append(line)
+
+            # Check if this line ends a paragraph (ends with sentence punctuation
+            # and next line starts with capital or is significantly different)
+            if line.endswith(('.', '!', '?', '"')) and i + 1 < len(lines):
+                next_line = lines[i + 1].strip()
+
+                # If next line starts with capital and current paragraph is substantial
+                if (next_line and next_line[0].isupper() and
+                    len(' '.join(current_paragraph)) > 50):
+                    paragraphs.append(' '.join(current_paragraph))
+                    current_paragraph = []
+
+        # Add any remaining content
+        if current_paragraph:
+            paragraphs.append(' '.join(current_paragraph))
+
+        # Filter out very short paragraphs (likely noise)
+        return [p for p in paragraphs if len(p) > 30]
 
     def chunk_text(self, text: str) -> List[TextChunk]:
         """Chunk text by paragraph count."""
