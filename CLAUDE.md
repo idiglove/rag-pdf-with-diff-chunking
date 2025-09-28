@@ -134,10 +134,10 @@ A comprehensive RAG (Retrieval-Augmented Generation) system designed to evaluate
 - [x] Initialize project repository with proper folder structure
 - [x] Set up Python virtual environment and requirements.txt
 - [x] Create basic FastAPI application with health check endpoint
-- [ ] Implement PDF text extraction using PyMuPDF or pdfplumber
-- [ ] Select and download a suitable test book (300+ pages, non-fiction)
-- [ ] Create basic character-based chunking function (1000 characters)
-- [ ] Set up ChromaDB for vector storage
+- [x] Implement PDF text extraction using PyMuPDF or pdfplumber
+- [x] Select and download a suitable test book (300+ pages, non-fiction)
+- [x] Create basic character-based chunking function (1000 characters)
+- [x] Set up ChromaDB for vector storage
 - [ ] Implement basic text embedding using sentence-transformers
 - [ ] Create simple storage and retrieval functions
 - [ ] Test end-to-end pipeline with sample queries
