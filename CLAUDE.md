@@ -238,6 +238,36 @@ A comprehensive RAG (Retrieval-Augmented Generation) system designed to evaluate
 - ✅ Comprehensive chunk metadata tracking with ChunkMetadata class
 - ✅ All strategies tested with real document processing (Naval Almanack - 271K chars)
 
+### Milestone 2.1: Unit Testing for Chunking Strategies (Immediate) ✅ COMPLETED
+
+**Goal**: Add comprehensive unit tests for all chunking strategies to ensure reliability and catch regressions
+
+**Todos**:
+
+- [x] Set up pytest testing framework in backend/tests/
+- [x] Create test fixtures with sample texts (short, medium, long, edge cases)
+- [x] Test FixedCharacterChunking with various chunk sizes and edge cases
+- [x] Test SentenceChunking with different sentence counts and malformed text
+- [x] Test ParagraphChunking with various paragraph structures
+- [x] Test TokenBasedChunking with and without tiktoken availability
+- [x] Test SlidingWindowChunking overlap logic and boundary conditions
+- [x] Test SectionBasedChunking header detection with various formats
+- [x] Test RecursiveChunking with deeply nested text structures
+- [x] Test SemanticSimilarityChunking with and without sentence transformer
+- [x] Test ChunkingManager strategy registration and switching
+- [x] Test chunk metadata accuracy (char positions, word counts, indices)
+- [x] Test error handling for empty text, invalid inputs, and malformed content
+
+**Deliverables**:
+
+- ✅ Complete test suite with 33 comprehensive tests covering all 8 chunking strategies
+- ✅ Test fixtures for edge cases: empty text, single characters, malformed input, special characters
+- ✅ Boundary condition testing: chunk size limits, overlap logic, section detection
+- ✅ Error handling validation for invalid strategies and malformed input
+- ✅ ChunkingManager functionality testing for strategy registration and statistics
+- ✅ Metadata accuracy verification for character positions and word counts
+- ✅ All tests passing (33/33) with comprehensive coverage
+
 ### Milestone 3: Performance Monitoring (Week 3)
 
 **Goal**: Build comprehensive evaluation and monitoring system
