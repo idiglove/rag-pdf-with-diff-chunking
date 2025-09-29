@@ -79,10 +79,111 @@
         }
       },
       "processing_time": 13.307660102844238
+    },
+    "naval_new_strategies": {
+      "document_name": "naval_new_strategies",
+      "pdf_path": "data/books/naval_almanack.pdf",
+      "text_length": 271131,
+      "word_count": 50312,
+      "strategies": {
+        "token_512": {
+          "chunk_count": 137,
+          "collection_name": "naval_new_strategies_token_512",
+          "stats": {
+            "total_chunks": 137,
+            "strategy": "token_512",
+            "total_characters": 271027,
+            "total_words": 50346,
+            "avg_chars_per_chunk": 1978.2992700729926,
+            "avg_words_per_chunk": 367.4890510948905,
+            "min_chars": 1409,
+            "max_chars": 2234,
+            "min_words": 152,
+            "max_words": 414
+          }
+        },
+        "sliding_window_1000_200": {
+          "chunk_count": 339,
+          "collection_name": "naval_new_strategies_sliding_window_1000_200",
+          "stats": {
+            "total_chunks": 339,
+            "strategy": "sliding_window_1000_200",
+            "total_characters": 338617,
+            "total_words": 62994,
+            "avg_chars_per_chunk": 998.8702064896755,
+            "avg_words_per_chunk": 185.8230088495575,
+            "min_chars": 731,
+            "max_chars": 1000,
+            "min_words": 97,
+            "max_words": 238
+          }
+        },
+        "section_based_3000": {
+          "chunk_count": 737,
+          "collection_name": "naval_new_strategies_section_based_3000",
+          "stats": {
+            "total_chunks": 737,
+            "strategy": "section_based_3000",
+            "total_characters": 261667,
+            "total_words": 48762,
+            "avg_chars_per_chunk": 355.04341926729984,
+            "avg_words_per_chunk": 66.1628222523745,
+            "min_chars": 50,
+            "max_chars": 3041,
+            "min_words": 1,
+            "max_words": 589
+          }
+        },
+        "recursive_2000": {
+          "chunk_count": 138,
+          "collection_name": "naval_new_strategies_recursive_2000",
+          "stats": {
+            "total_chunks": 138,
+            "strategy": "recursive_2000",
+            "total_characters": 270994,
+            "total_words": 50312,
+            "avg_chars_per_chunk": 1963.7246376811595,
+            "avg_words_per_chunk": 364.57971014492756,
+            "min_chars": 630,
+            "max_chars": 2000,
+            "min_words": 110,
+            "max_words": 421
+          }
+        },
+        "semantic_similarity_0.7": {
+          "chunk_count": 3301,
+          "collection_name": "naval_new_strategies_semantic_similarity_0.7",
+          "stats": {
+            "total_chunks": 3301,
+            "strategy": "semantic_similarity_0.7",
+            "total_characters": 267595,
+            "total_words": 50269,
+            "avg_chars_per_chunk": 81.06482883974553,
+            "avg_words_per_chunk": 15.22841563162678,
+            "min_chars": 11,
+            "max_chars": 1751,
+            "min_words": 1,
+            "max_words": 324
+          }
+        }
+      },
+      "processing_time": 49.49212908744812
     }
   },
   "document_stats": {
     "naval": {
+      "total_pages": 242,
+      "title": "Eric-Jorgenson_The-Almanack-of-Naval-Ravikant.indd",
+      "author": "",
+      "subject": "",
+      "creator": "Adobe InDesign 15.1 (Macintosh)",
+      "producer": "macOS Version 10.15.5 (Build 19F101) Quartz PDFContext, AppendMode 1.1",
+      "creation_date": "D:20200810130420-05'00'",
+      "modification_date": "D:20200819005507Z00'00'",
+      "method": "pymupdf",
+      "total_chars": 271131
+    },
+    "naval_new_strategies": {
       "total_pages": 242,
       "title": "Eric-Jorgenson_The-Almanack-of-Naval-Ravikant.indd",
       "author": "",
