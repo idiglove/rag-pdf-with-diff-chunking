@@ -22,7 +22,77 @@
       "text_length": 0,
       "word_count": 0,
       "processing_time": 0
+    },
+    "naval": {
+      "document_name": "naval",
+      "pdf_path": "data/books/naval_almanack.pdf",
+      "text_length": 271131,
+      "word_count": 50312,
+      "strategies": {
+        "fixed_char_1000": {
+          "chunk_count": 272,
+          "collection_name": "naval_fixed_char_1000",
+          "stats": {
+            "total_chunks": 272,
+            "strategy": "fixed_char_1000",
+            "total_characters": 271036,
+            "total_words": 50490,
+            "avg_chars_per_chunk": 996.4558823529412,
+            "avg_words_per_chunk": 185.625,
+            "min_chars": 131,
+            "max_chars": 1000,
+            "min_words": 21,
+            "max_words": 238
+          }
+        },
+        "sentence_8": {
+          "chunk_count": 428,
+          "collection_name": "naval_sentence_8",
+          "stats": {
+            "total_chunks": 428,
+            "strategy": "sentence_8",
+            "total_characters": 270704,
+            "total_words": 50312,
+            "avg_chars_per_chunk": 632.4859813084112,
+            "avg_words_per_chunk": 117.55140186915888,
+            "min_chars": 225,
+            "max_chars": 2443,
+            "min_words": 22,
+            "max_words": 495
+          }
+        },
+        "paragraph_3": {
+          "chunk_count": 315,
+          "collection_name": "naval_paragraph_3",
+          "stats": {
+            "total_chunks": 315,
+            "strategy": "paragraph_3",
+            "total_characters": 260406,
+            "total_words": 46409,
+            "avg_chars_per_chunk": 826.6857142857143,
+            "avg_words_per_chunk": 147.33015873015873,
+            "min_chars": 105,
+            "max_chars": 6233,
+            "min_words": 16,
+            "max_words": 632
+          }
+        }
+      },
+      "processing_time": 13.307660102844238
     }
   },
-  "document_stats": {}
+  "document_stats": {
+    "naval": {
+      "total_pages": 242,
+      "title": "Eric-Jorgenson_The-Almanack-of-Naval-Ravikant.indd",
+      "author": "",
+      "subject": "",
+      "creator": "Adobe InDesign 15.1 (Macintosh)",
+      "producer": "macOS Version 10.15.5 (Build 19F101) Quartz PDFContext, AppendMode 1.1",
+      "creation_date": "D:20200810130420-05'00'",
+      "modification_date": "D:20200819005507Z00'00'",
+      "method": "pymupdf",
+      "total_chars": 271131
+    }
+  }
 }
